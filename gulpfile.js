@@ -116,22 +116,8 @@ var browserifyTask = function (options) {
 
 };
 
-gulp.task('copySemanticThemes', function () {
-  return gulp.src('./node_modules/semantic-ui-less/themes/**')
-  .pipe(gulp.dest('public/themes'));
-});
 
-gulp.task('remove-symlink', function () {
-  del(['node_modules/semantic-ui-less/theme.config', 'node_modules/semantic-ui-less/site']);
-});
-
-gulp.task('semantic-symlink', function () {
-  gulp.src(['app/css/semantic-ui/theme.config', 'app/css/semantic-ui/site'])
-    .pipe(symlink(['node_modules/semantic-ui-less/theme.config',
-                   'node_modules/semantic-ui-less/site']));
-});
-
-gulp.task('createCss', ['copySemanticThemes', 'remove-symlink', 'semantic-symlink'], function () {
+gulp.task('createCss', function () {
   return gulp.src(['./app/css/main.less', './app/css/general.less', './app/css/**/*.css'])
     .pipe(less())
     .pipe(concat('main.css'))

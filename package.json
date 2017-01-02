@@ -32,7 +32,6 @@
     "phantomjs-prebuilt": "^2.1.7",
     "rd3": "^0.7.4",
     "react-dom": "^15.0.2",
-    "semantic-ui-less": "^2.2.1",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
   },
