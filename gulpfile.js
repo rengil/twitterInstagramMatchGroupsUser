@@ -5,6 +5,7 @@ var babelify = require('babelify');
 var minifyify = require('minifyify');
 var source = require('vinyl-source-stream');
 var connect = require('gulp-connect');
+var less = require('gulp-less');
 
 gulp.task('build', function () {
   browserify({
@@ -28,5 +29,10 @@ gulp.task('html', function () {
 		.pipe(gulp.dest('./build'));
 });
 
+gulp.task('css', function () {
+  return gulp.src('./app/css/main.less')
+    .pipe(less())
+    .pipe(gulp.dest('./build'));
+});
 
-gulp.task('default', ['html', 'build']);
+gulp.task('default', ['html', 'css' , 'build']);
