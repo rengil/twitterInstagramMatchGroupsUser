@@ -116,6 +116,11 @@ var browserifyTask = function (options) {
 
 };
 
+gulp.task('copyIndexHtml', function () {
+  return gulp.src('./app/index.html')
+		.pipe(gulp.dest('./build'));
+});
+
 
 gulp.task('createCss', function () {
   return gulp.src(['./app/css/main.less', './app/css/general.less', './app/css/**/*.css'])
@@ -125,13 +130,13 @@ gulp.task('createCss', function () {
 });
 
 // Starts our development workflow
-gulp.task('default', ['createCss'], function () {
+gulp.task('default', ['copyIndexHtml', 'createCss'], function () {
   livereload.listen();
 
   browserifyTask({
     development: true,
     src: './app/js/main.js',
-    dest: './build'
+    dest: './build/'
   });
 
   connect.server({
