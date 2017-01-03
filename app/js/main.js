@@ -1,16 +1,10 @@
-var React = require('react');
+import React from 'react'
+import { render } from 'react-dom'
+import { Router, Route, Link, browserHistory } from 'react-router'
+import UserRegister from './Components/UserRegister';
 
-
-module.exports = React.createClass({
-  render: function () {
-    return (
-     <div className='ui fluid container top-margin-container'>
-              <div className='ui stackable four column grid'>
-                  <div id='dashboard-top-elements' className='row'>
-                      Teste
-                  </div>
-              </div>
-            </div>
-          );
-  },
-});
+render((
+  <Router history={browserHistory}>
+    <Route path="/" component={UserRegister}> </Route>
+  </Router>
+), document.getElementById('content'))
