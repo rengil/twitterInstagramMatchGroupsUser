@@ -4,21 +4,23 @@ let sendInfoURL = 'http://108.168.180.148/userconfig/info/e6147626-d1ea-11e6-bf2
 
 const UserRegister = React.createClass({
 
+  getInitialState: function () {
+    return {
+      email: this.props.userInformation.email,
+      firstName: this.props.userInformation.firstName,
+      lastName: this.props.userInformation.lastName,
+    }
+  },
 
-  sendUserInfo: function () {
-    $.ajax({
-       url: sendInfoURL,
-       contentType: "application/json",
-       type: 'PUT',
-       data:  JSON.stringify({
-         	"email": 'renanteste@teste.com.br',
-         	"firstName": 'renanteste',
-          "lastName": 'renanteste'
-       }),
-       success: (response) => {
-         this.props.onRegisterUser();
-       }
-    });
+  onChangeInput: function (inputName, event) {
+    const newState = Object.assign({},this.state);
+    const _this = this;
+    newState[inputName] = event.target.value;
+    this.setState(
+      newState, function () {
+        _this.props.sendUserInfo(_this.state)
+      }
+    )
   },
 
   render: function () {
@@ -29,17 +31,32 @@ const UserRegister = React.createClass({
         <form className='user-info'>
           <div className="form-group">
            <label htmlFor="firstNameInput">First Name</label>
-           <input onChange={this.sendUserInfo} type="text" className="form-control" id='firstNameInput'/>
+           <input onChange={this.onChangeInput.bind(this, 'firstName')}
+                  type="text"
+                  className="form-control"
+                  id='firstNameInput'
+                  value={this.state.firstName}
+          />
           </div>
 
           <div className="form-group">
            <label htmlFor="secondNameInput">Second Name</label>
-           <input onChange={this.sendUserInfo} type="text" className="form-control" id='secondNameInput'/>
+           <input onChange={this.onChangeInput.bind(this, 'lastName')}
+                  type="text"
+                  className="form-control"
+                  id='secondNameInput'
+                  value={this.state.lastName}
+           />
           </div>
 
           <div className="form-group">
            <label htmlFor="emailInput">Email address</label>
-           <input onChange={this.sendUserInfo} type="email" className="form-control" id='emailInput'/>
+           <input onChange={this.onChangeInput.bind(this, 'email')}
+                  type="email"
+                  className="form-control"
+                  id='emailInput'
+                  value={this.state.email}
+          />
           </div>
 
         </form>

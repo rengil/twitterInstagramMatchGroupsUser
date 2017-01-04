@@ -1,10 +1,50 @@
 import React from 'react';
 
-let sendInfoURL = 'http://108.168.180.148/userconfig/info/e6147626-d1ea-11e6-bf26-cec0c932ce01';
+let userConfig = 'http://108.168.180.148/userconfig/00000001-0002-0003-0004-000000000005';
 
 const UserMatchingGroups = React.createClass({
 
+  getInitialState: function () {
+    return {
+        matchingGroups: [],
+        loadedMatchingGroups: false
+    }
+
+  },
+
+  componentDidMount: function () {
+    $.ajax({
+       url: userConfig,
+       contentType: "application/json",
+       type: 'GET',
+       success: (userConfig) => {
+        this.setState({
+          userConfig
+        });
+        this.getUserMatchingGroups(userConfig);
+       }
+    });
+  },
+
+  getUserMatchingGroups: function (userConfig) {
+    let groupSet = new Set();
+    userConfig.twitterMatchGroups.map(function ( twitterMatch ) {
+      groupSet.add(twitterMatch.name);
+    });
+    userConfig.instagramMatchGroups.map(function ( instagramMatch ) {
+      groupSet.add(instagramMatch.name);
+    });
+    this.setState({
+      matchingGroups: [...groupSet],
+      loadedMatchingGroups: true
+    })
+
+  },
+
   render: function () {
+    if (!this.state.loadedMatchingGroups) {
+      return (<div> </div>)
+    }
     return (
       <div className='page-content'>
         <h2> Your matching groups </h2>
@@ -16,21 +56,14 @@ const UserMatchingGroups = React.createClass({
           </thead>
 
           <tbody>
-            <tr>
-              <td> Renans List 1 </td>
-              <td> <i className="material-icons">mode_edit</i> </td>
-              <td> <i className="material-icons">delete</i> </td>
-            </tr>
-            <tr>
-              <td> Renans List 1 </td>
-            </tr>
-            <tr>
-              <td> Renans List 1 </td>
-            </tr>
-            <tr>
-              <td> Renans List 1 </td>
-            </tr>
-
+            {this.state.matchingGroups.map(function (matchingGroup){
+            return (<tr>
+              <td> {matchingGroup} </td>
+              <td> <i className="material-icons clickable">mode_edit</i> </td>
+              <td> <i className="material-icons clickable">delete</i> </td>
+            </tr>)
+          })
+          }
           </tbody>
 
         </table>
