@@ -96,6 +96,13 @@ const App = React.createClass({
     });
   },
 
+  editMatchGroup: function (matchGroupName) {
+    this.setState({
+      openMatchingGroup: true,
+      matchGroupName: matchGroupName
+    });
+  },
+
   render: function () {
     if(!this.state.userInfoArrived){
       return  (<div> </div>)
@@ -116,12 +123,16 @@ const App = React.createClass({
                           RegisterUser={this.onRegisterUser}/>
           </div>
           <div className="col-md-1"> </div>
-          <div className="col-md-7">
+          <div className="col-md-6">
           {this.state.userRegistered
-              ? <UserMatchingGroups onAddMatchingGroup={this.onAddMatchingGroup}/>
+              ? <UserMatchingGroups
+                    editMatchGroup={this.editMatchGroup}
+                    onAddMatchingGroup={this.onAddMatchingGroup}/>
               : ''
           }
+          <div className="col-md-1"> </div>
           </div>
+        </div>
 
           {this.state.openMatchingGroup ?
           <div className="row">
@@ -134,7 +145,6 @@ const App = React.createClass({
           : ''
           }
         </div>
-      </div>
     )
   }
 });

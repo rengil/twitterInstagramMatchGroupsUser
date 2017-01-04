@@ -93,6 +93,10 @@ const UserMatchingGroups = React.createClass({
     this.props.onAddMatchingGroup("new matching group " + newMatchName);
   },
 
+  editMatchGroup: function (matchGroup) {
+    this.props.editMatchGroup(matchGroup);
+  },
+
   render: function () {
     if (!this.state.loadedMatchingGroups) {
       return (<div> </div>)
@@ -112,10 +116,10 @@ const UserMatchingGroups = React.createClass({
               {this.state.matchingGroups.map(function (matchingGroup){
               return (<tr>
                 <td> {matchingGroup} </td>
-                <td> <i className="material-icons clickable">mode_edit</i> </td>
+                <td> <i onClick={this.editMatchGroup.bind(this, matchingGroup)} className="material-icons clickable">mode_edit</i> </td>
                 <td> <i className="material-icons clickable">delete</i> </td>
               </tr>)
-            })
+            }.bind(this))
             }
             </tbody>
 
