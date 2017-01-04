@@ -1,29 +1,43 @@
 import React from 'react';
 
-let userConfig = 'http://108.168.180.148/userconfig/00000001-0002-0003-0004-000000000005';
+let userConfig = 'http://108.168.180.148/userconfig/';
 
 const UserMatchingGroups = React.createClass({
 
   getInitialState: function () {
     return {
         matchingGroups: [],
-        loadedMatchingGroups: false
+        loadedMatchingGroups: false,
+        userConfig: undefined,
     }
 
   },
 
   componentDidMount: function () {
+    this.fetchMatchingGroups();
+  },
+
+  fetchMatchingGroups: function ( ) {
+    const uuid = this.getLocalStorageId();
     $.ajax({
-       url: userConfig,
+       url: userConfig + uuid,
        contentType: "application/json",
        type: 'GET',
        success: (userConfig) => {
         this.setState({
-          userConfig
+          userConfig,
+          loadedMatchingGroups: true
         });
-        this.getUserMatchingGroups(userConfig);
+        if (userConfig.twitterMatchGroups && userConfig.instagramMatchGroups) {
+          this.getUserMatchingGroups(userConfig);
+        }
        }
     });
+
+  },
+
+  getLocalStorageId: function () {
+    return localStorage.getItem("id");
   },
 
   getUserMatchingGroups: function (userConfig) {
@@ -36,9 +50,45 @@ const UserMatchingGroups = React.createClass({
     });
     this.setState({
       matchingGroups: [...groupSet],
-      loadedMatchingGroups: true
     })
 
+  },
+
+  getMatchGroup: function (name, influencer, keywords) {
+    const newMatchName = this.state.matchingGroups.length + 1;
+    var matchGroup = {
+            name: "new matching group " + newMatchName,
+            influencers: ["string"],
+            keywords: ["string"]
+    };
+    return matchGroup;
+
+
+  },
+
+  addMatchingGroup: function () {
+    const uuid = this.getLocalStorageId();
+
+    $.ajax({
+           url: "http://108.168.180.148/userconfig/" + uuid,
+           contentType: "application/json",
+           type: 'PUT',
+           data:  JSON.stringify({
+              "twitterMatchGroups":
+                 [ ... this.state.userConfig.twitterMatchGroups || {},
+                 this.getMatchGroup()
+               ],
+              "instagramMatchGroups":
+                [ ... this.state.userConfig.instagramMatchGroups || {},
+                this.getMatchGroup()
+              ]
+            }),
+           success: (response) => {
+             this.fetchMatchingGroups();
+           }
+        });
+
+    this.props.onAddMatchingGroup();
   },
 
   render: function () {
@@ -48,27 +98,29 @@ const UserMatchingGroups = React.createClass({
     return (
       <div className='page-content'>
         <h2> Your matching groups </h2>
-        <table className='table'>
-          <thead>
-            <tr>
-              <th> Matching Group </th>
-            </tr>
-          </thead>
+        <div className='user-matching-groups'>
+          <table className='table'>
+            <thead>
+              <tr>
+                <th> Matching Group </th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {this.state.matchingGroups.map(function (matchingGroup){
-            return (<tr>
-              <td> {matchingGroup} </td>
-              <td> <i className="material-icons clickable">mode_edit</i> </td>
-              <td> <i className="material-icons clickable">delete</i> </td>
-            </tr>)
-          })
-          }
-          </tbody>
+            <tbody>
+              {this.state.matchingGroups.map(function (matchingGroup){
+              return (<tr>
+                <td> {matchingGroup} </td>
+                <td> <i className="material-icons clickable">mode_edit</i> </td>
+                <td> <i className="material-icons clickable">delete</i> </td>
+              </tr>)
+            })
+            }
+            </tbody>
 
-        </table>
+          </table>
+        </div>
 
-        <button onClick={this.props.addMatchingGroup} type="button" className="btn"> ADD MATCHING GROUP </button>
+        <button onClick={this.addMatchingGroup} type="button" className="btn"> ADD MATCHING GROUP </button>
       </div>
     )
   }

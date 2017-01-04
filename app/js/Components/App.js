@@ -75,7 +75,7 @@ const App = React.createClass({
       });
   },
 
-  getLocalStorageId: function (uuid) {
+  getLocalStorageId: function () {
     return localStorage.getItem("id");
   },
 
@@ -89,7 +89,7 @@ const App = React.createClass({
     });
   },
 
-  addMatchingGroup: function () {
+  onAddMatchingGroup: function () {
     //FETCH COM A ADIÇÃO DO NOVO MATCHING GROUP
     this.setState({
       openMatchingGroup: true
@@ -118,7 +118,7 @@ const App = React.createClass({
           <div className="col-md-1"> </div>
           <div className="col-md-7">
           {this.state.userRegistered
-              ? <UserMatchingGroups addMatchingGroup={this.addMatchingGroup}/>
+              ? <UserMatchingGroups onAddMatchingGroup={this.onAddMatchingGroup}/>
               : ''
           }
           </div>
