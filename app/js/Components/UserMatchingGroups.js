@@ -68,6 +68,7 @@ const UserMatchingGroups = React.createClass({
 
   addMatchingGroup: function () {
     const uuid = this.getLocalStorageId();
+    const newMatchName = this.state.matchingGroups.length + 1;
 
     $.ajax({
            url: "http://108.168.180.148/userconfig/" + uuid,
@@ -84,11 +85,12 @@ const UserMatchingGroups = React.createClass({
               ]
             }),
            success: (response) => {
+             this.props.onAddMatchingGroup("new matching group " + newMatchName);
              this.fetchMatchingGroups();
            }
         });
 
-    this.props.onAddMatchingGroup();
+    this.props.onAddMatchingGroup("new matching group " + newMatchName);
   },
 
   render: function () {

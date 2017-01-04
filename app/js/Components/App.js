@@ -89,10 +89,10 @@ const App = React.createClass({
     });
   },
 
-  onAddMatchingGroup: function () {
-    //FETCH COM A ADIÇÃO DO NOVO MATCHING GROUP
+  onAddMatchingGroup: function (newMatchName) {
     this.setState({
-      openMatchingGroup: true
+      openMatchingGroup: true,
+      matchGroupName: newMatchName
     });
   },
 
@@ -127,7 +127,7 @@ const App = React.createClass({
           <div className="row">
             <div className="col-md-1"> </div>
             <div className="col-md-10">
-              <MatchingGroup/>
+              <MatchingGroup matchGroupName={this.state.matchGroupName}/>
             </div>
             <div className="col-md-1"> </div>
           </div>
