@@ -6,12 +6,36 @@ const UserMatchingGroups = React.createClass({
 
   render: function () {
     return (
-      <div>
-      <div className='container-fluid page-header'>
-        <h1>Your Matching Groups</h1>
-        <p className="lead"> Here you can add a matching group</p>
-      </div>
-        Hora de testar os matching groups
+      <div className='page-content'>
+        <h2> Your matching groups </h2>
+        <table className='table'>
+          <thead>
+            <tr>
+              <th> Matching Group </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td> Renans List 1 </td>
+              <td> <i className="material-icons">mode_edit</i> </td>
+              <td> <i className="material-icons">delete</i> </td>
+            </tr>
+            <tr>
+              <td> Renans List 1 </td>
+            </tr>
+            <tr>
+              <td> Renans List 1 </td>
+            </tr>
+            <tr>
+              <td> Renans List 1 </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+        <button onClick={this.props.addMatchingGroup} type="button" className="btn"> ADD MATCHING GROUP </button>
       </div>
     )
   }
