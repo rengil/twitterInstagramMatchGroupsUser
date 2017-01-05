@@ -54,25 +54,30 @@ const UserMatchingGroups = React.createClass({
     const uuid = this.getLocalStorageId();
     const newMatchName = this.state.matchingGroups.length + 1;
 
-    $.ajax({
-           url: "http://108.168.180.148/userconfig/" + uuid,
-           contentType: "application/json",
-           type: 'PUT',
-           data:  JSON.stringify({
-              "twitterMatchGroups":
-                 [ ... this.props.userConfig.twitterMatchGroups || {},
-                 this.getMatchGroup()
-               ],
-              "instagramMatchGroups":
-                [ ... this.props.userConfig.instagramMatchGroups || {},
-                this.getMatchGroup()
-              ]
-            }),
-           success: (response) => {
-             this.props.onAddMatchingGroup("new matching group " + newMatchName);
-             this.fetchMatchingGroups();
-           }
-        });
+
+        fetch("http://108.168.180.148/userconfig/" + uuid, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin', // you need to add this line
+                body: JSON.stringify({
+                   "twitterMatchGroups":
+                      [ ... this.props.userConfig.twitterMatchGroups || {},
+                      this.getMatchGroup()
+                    ],
+                   "instagramMatchGroups":
+                     [ ... this.props.userConfig.instagramMatchGroups || {},
+                     this.getMatchGroup()
+                   ]
+                 }),
+            })
+            .then((response) => response)
+            .then((response) => {
+              this.props.onAddMatchingGroup("new matching group " + newMatchName);
+              this.props.fetchMatchingGroups();
+            });
 
     this.props.onAddMatchingGroup("new matching group " + newMatchName);
   },

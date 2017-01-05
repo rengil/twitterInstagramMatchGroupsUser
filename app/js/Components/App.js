@@ -41,40 +41,48 @@ const App = React.createClass({
     return true;
   },
 
-  fetchUserBasicInformation: function ( uuij ) {
-    $.ajax({
-       url: "http://108.168.180.148/userconfig/info/" + uuid,
-       contentType: "application/json",
-       type: 'GET',
-       success: (userInformation) => {
-         this.setState({
-           userInformation,
-           userRegistered: true,
-           userInfoArrived: true
-         })
+  fetchUserBasicInformation: function ( uuid ) {
+    fetch("http://108.168.180.148/userconfig/info/" + uuid, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin', // you need to add this line
+        })
+        .then((response) => response.json())
+        .then((userInformation) => {
+          this.setState({
+            userInformation,
+            userRegistered: true,
+            userInfoArrived: true
+          })
 
-         this.fetchMatchingGroups();
+          this.fetchMatchingGroups();
 
-       }
-    });
+        });
+
   },
 
   sendUserInfo: function (data) {
-    const uuid = this.getLocalStorageId() || generateAndSaveNewUUID();
+    const uuid = this.getLocalStorageId() || this.generateAndSaveNewUUID();
 
-    $.ajax({
-         url: "http://108.168.180.148/userconfig/info/" + uuid,
-         contentType: "application/json",
-         type: 'PUT',
-         data:  JSON.stringify({
-           	"email": data.email ,
-           	"firstName": data.firstName,
-            "lastName": data.lastName
-         }),
-         success: (response) => {
-           this.onRegisterUser();
-         }
-      });
+    fetch("http://108.168.180.148/userconfig/info/" + uuid, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin', // you need to add this line
+            body: JSON.stringify({
+              	"email": data.email ,
+              	"firstName": data.firstName,
+               "lastName": data.lastName
+            }),
+        })
+        .then((response) => response)
+        .then((response) => {
+          this.onRegisterUser();
+        });
   },
 
   generateAndSaveNewUUID: function () {
@@ -162,6 +170,7 @@ const App = React.createClass({
           <div className="col-md-6">
               {this.state.userRegistered
                   ? <UserMatchingGroups
+                        fetchMatchingGroups={this.fetchMatchingGroups}
                         userConfig={this.state.userConfig}
                         editMatchGroup={this.editMatchGroup}
                         onAddMatchingGroup={this.onAddMatchingGroup}/>

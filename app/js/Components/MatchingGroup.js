@@ -17,7 +17,6 @@ const MatchingGroup = React.createClass({
   },
 
   componentDidMount: function () {
-    this.scrollAnimation();
     this.fetchMatchingGroups();
   },
 
@@ -26,27 +25,26 @@ const MatchingGroup = React.createClass({
       matchGroupName: nextProps.matchGroupName
     })
 
-    //this.scrollAnimation();
     this.fetchMatchingGroups();
   },
 
-  scrollAnimation: function () {
-    var doc = document.getElementById('matching-group');
-    var rect = doc.getBoundingClientRect();
-    var body = $("html, body");
-    $("html, body").animate({ scrollTop: rect.top}, 200)
-  },
-
   fetchMatchingGroups: function ( ) {
+
     const uuid = this.getLocalStorageId();
-    $.ajax({
-       url: userConfig + uuid,
-       contentType: "application/json",
-       type: 'GET',
-       success: (userConfig) => {
-          this.splitThisMatchingGroupsFromOthers(userConfig);
-       }
+
+    fetch(userConfig + uuid, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin', // you need to add this line
+        })
+        .then((response) => response.json())
+        .then((userConfig) => {
+            this.splitThisMatchingGroupsFromOthers(userConfig);
+
     });
+
 
   },
 
@@ -91,24 +89,28 @@ const MatchingGroup = React.createClass({
 
     const uuid = this.getLocalStorageId();
 
-    $.ajax({
-           url: "http://108.168.180.148/userconfig/" + uuid,
-           contentType: "application/json",
-           type: 'PUT',
-           data:  JSON.stringify({
-              "twitterMatchGroups":
-                 [ ... _this.state.othersTwitterMatchGroup || {},
-                 this.state.actualTwitterMatchGroup
-               ],
-              "instagramMatchGroups":
-                [ ... _this.state.othersInstagramMatchGroup || {},
-                this.state.actualInstagramMatchGroup
-              ]
-            }),
-           success: (response) => {
+    fetch("http://108.168.180.148/userconfig/" + uuid, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin', // you need to add this line
+            body: JSON.stringify({
+               "twitterMatchGroups":
+                  [ ... _this.state.othersTwitterMatchGroup || {},
+                  this.state.actualTwitterMatchGroup
+                ],
+               "instagramMatchGroups":
+                 [ ... _this.state.othersInstagramMatchGroup || {},
+                 this.state.actualInstagramMatchGroup
+               ]
+             }),
+        })
+        .then((response) => response)
+        .then((response) => {
 
-           }
-    });
+        });
   },
 
   onChangeName: function (inputName, event) {
