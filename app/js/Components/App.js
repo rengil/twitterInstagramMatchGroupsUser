@@ -3,6 +3,13 @@ import UserMatchingGroups from './UserMatchingGroups';
 import MatchingGroup from './MatchingGroup';
 import React from 'react';
 const uuidV1 = require('uuid/v1');
+var fetch = require('node-fetch');
+
+/**
+ * Represents a the main class of the app
+ *
+ * @class App
+ */
 
 const App = React.createClass({
 
@@ -21,7 +28,7 @@ const App = React.createClass({
     }
   },
 
-  // The first I do is to check if the user id exists on my local Storage.
+
   componentDidMount: function () {
     const uuid = this.getLocalStorageId();
     const userRegistered = this.checkIfUserRegistered(uuid);
@@ -30,6 +37,13 @@ const App = React.createClass({
     }
   },
 
+  /**
+   * Function that check if the UUID of the user is registered in the local Storage
+   * @function checkIfUserRegistered
+   * @author Renan Lazarini Gil
+   * @param {string} uuid - the uuid to be checked in the local Storage
+   * @memberOf App
+   */
   checkIfUserRegistered: function (uuid) {
     if(!uuid) {
       this.setState({
@@ -41,13 +55,21 @@ const App = React.createClass({
     return true;
   },
 
+
+  /**
+   * GET method that returns user information.
+   * @function fetchUserBasicInformation
+   * @author Renan Lazarini Gil
+   * @param {string} uuid - the uuid to be checked in the local Storage
+   * @memberOf App
+   */
   fetchUserBasicInformation: function ( uuid ) {
     fetch("http://108.168.180.148/userconfig/info/" + uuid, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
-            credentials: 'same-origin', // you need to add this line
+            credentials: 'same-origin',
         })
         .then((response) => response.json())
         .then((userInformation) => {
@@ -63,6 +85,13 @@ const App = React.createClass({
 
   },
 
+  /**
+   * Save the user informations
+   * @function fetchUserBasicInformation
+   * @author Renan Lazarini Gil
+   * @param {object} data - email, firstName and lastName of the user
+   * @memberOf App
+   */
   sendUserInfo: function (data) {
     const uuid = this.getLocalStorageId() || this.generateAndSaveNewUUID();
 
@@ -72,7 +101,7 @@ const App = React.createClass({
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            credentials: 'same-origin', // you need to add this line
+            credentials: 'same-origin',
             body: JSON.stringify({
               	"email": data.email ,
               	"firstName": data.firstName,
@@ -85,17 +114,24 @@ const App = React.createClass({
         });
   },
 
+  /**
+   * generate a new uuiv and register to the local storage
+   * @function generateAndSaveNewUUID
+   * @author Renan Lazarini Gil
+   * @memberOf App
+   */
   generateAndSaveNewUUID: function () {
     const uuid = uuidV1();
     this.setLocalStorageId(uuid);
     return uuid;
   },
 
-  afterEditMatchingGroup: function (matchGroupName) {
-    this.fetchMatchingGroups();
-    this.editMatchGroup(matchGroupName);
-  },
-
+  /**
+   * Get the users previouly registered matching groups and save in the userConfig state
+   * @function fetchMatchingGroups
+   * @author Renan Lazarini Gil
+  * @memberOf App
+   */
   fetchMatchingGroups: function ( ) {
     const uuid = this.getLocalStorageId();
     $.ajax({
@@ -111,14 +147,31 @@ const App = React.createClass({
     });
   },
 
+  /**
+   * Get the user UUID in the local storage
+   * @function getLocalStorageId
+   * @author Renan Lazarini Gil
+  * @memberOf App
+   */
   getLocalStorageId: function () {
     return localStorage.getItem("id");
   },
 
+  /**
+   * Set the user UUID in the local storage
+   * @function setLocalStorageId
+   * @author Renan Lazarini Gil
+   */
   setLocalStorageId: function (uuid) {
     localStorage.setItem("id", uuid)
   },
 
+  /**
+   * Function to work as as listener to UserRegister Component and dispatch the fetchMatchingGroups
+   * @function onRegisterUser
+   * @author Renan Lazarini Gil
+   * @memberOf App
+   */
   onRegisterUser: function () {
     this.setState({
       userRegistered: true
@@ -126,19 +179,19 @@ const App = React.createClass({
     this.fetchMatchingGroups();
   },
 
-  onAddMatchingGroup: function (newMatchName) {
+  /**
+   * Function to work as a listener for Matching Group to callback the adding of a new group
+   * and open the MatchingGroup
+   * @function openMatchingGroup
+   * @author Renan Lazarini Gil
+   * @method (string) newMatchName - the new group match name
+   * @memberOf App
+   */
+  openMatchingGroup: function (newMatchName) {
     this.setState({
       openMatchingGroup: true,
       matchGroupName: newMatchName
     });
-  },
-
-  editMatchGroup: function (matchGroupName) {
-    this.setState({
-      openMatchingGroup: true,
-      matchGroupName: matchGroupName
-    });
-
   },
 
   render: function () {
@@ -172,8 +225,7 @@ const App = React.createClass({
                   ? <UserMatchingGroups
                         fetchMatchingGroups={this.fetchMatchingGroups}
                         userConfig={this.state.userConfig}
-                        editMatchGroup={this.editMatchGroup}
-                        onAddMatchingGroup={this.onAddMatchingGroup}/>
+                        openMatchingGroup={this.openMatchingGroup}/>
                   : ''
               }
           </div>
@@ -185,7 +237,6 @@ const App = React.createClass({
             <div className="col-md-1"> </div>
             <div id='matching-group' className="col-md-10">
               <MatchingGroup
-               afterEditMatchingGroup={this.afterEditMatchingGroup}
                matchGroupName={this.state.matchGroupName}/>
             </div>
             <div className="col-md-1"> </div>

@@ -2,6 +2,13 @@ import React from 'react';
 
 let sendInfoURL = 'http://108.168.180.148/userconfig/info/e6147626-d1ea-11e6-bf26-cec0c932ce01';
 
+/**
+ *  Represent the user data
+ *
+ * @class UserRegister
+ */
+
+
 const UserRegister = React.createClass({
 
   getInitialState: function () {
@@ -11,6 +18,15 @@ const UserRegister = React.createClass({
       lastName: this.props.userInformation.lastName,
     }
   },
+
+  /**
+   * Controls the changes of the inputs and the auto save of the user data
+   * @function onChangeInput
+   * @author Renan Lazarini Gil
+   * @method (string) inputName - which input was changed
+   * @method (string) event - the event to get the value
+  * @memberOf UserRegister
+   */
 
   onChangeInput: function (inputName, event) {
     const newState = Object.assign({},this.state);

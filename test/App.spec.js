@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { chai, expect } from 'chai';
+var fetch = require('node-fetch');
 
 import jsdom from 'jsdom'
 

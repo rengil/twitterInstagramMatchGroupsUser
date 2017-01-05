@@ -1,7 +1,14 @@
 import React from 'react';
+var fetch = require('node-fetch');
 
 let sendInfoURL = 'http://108.168.180.148/userconfig/info/e6147626-d1ea-11e6-bf26-cec0c932ce01';
 let userConfig = 'http://108.168.180.148/userconfig/';
+
+/**
+ * Represents a specif matching group that will be edited or have been just added
+ *
+ * @class MatchingGroup
+ */
 
 const MatchingGroup = React.createClass({
 
@@ -28,6 +35,12 @@ const MatchingGroup = React.createClass({
     this.fetchMatchingGroups();
   },
 
+  /**
+   * GET the user info and call the splitThisMatchingGroupsFromOthers
+   * @function fetchMatchingGroups
+   * @author Renan Lazarini Gil
+  * @memberOf MatchingGroup
+   */
   fetchMatchingGroups: function ( ) {
 
     const uuid = this.getLocalStorageId();
@@ -37,7 +50,7 @@ const MatchingGroup = React.createClass({
             headers: {
                 'Content-Type': 'application/json'
             },
-            credentials: 'same-origin', // you need to add this line
+            credentials: 'same-origin',
         })
         .then((response) => response.json())
         .then((userConfig) => {
@@ -48,10 +61,24 @@ const MatchingGroup = React.createClass({
 
   },
 
+  /**
+   * Get the local Storage UUID
+   * @function getLocalStorageId
+   * @author Renan Lazarini Gil
+  * @memberOf MatchingGroup
+   */
   getLocalStorageId: function () {
     return localStorage.getItem("id");
   },
 
+  /**
+   * Split in two ways the data. First the actual data from the others. Second, the
+   * instagram from the twitter. This will be used to save the data
+   * @function splitThisMatchingGroupsFromOthers
+   * @author Renan Lazarini Gil
+  * @param object userConfig - All matching group user data
+  * @memberOf MatchingGroup
+   */
   splitThisMatchingGroupsFromOthers: function (userConfig) {
     let actualTwitterMatchGroup = {},
         actualInstagramMatchGroup = {},
@@ -84,6 +111,12 @@ const MatchingGroup = React.createClass({
 
   },
 
+  /**
+   * fetch the twitter and instagram data, joining the changed info with the others info
+   * @function updateMatchingGroup
+   * @author Renan Lazarini Gil
+   * @memberOf MatchingGroup
+   */
   updateMatchingGroup: function () {
     let _this = this;
 
@@ -95,7 +128,7 @@ const MatchingGroup = React.createClass({
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            credentials: 'same-origin', // you need to add this line
+            credentials: 'same-origin',
             body: JSON.stringify({
                "twitterMatchGroups":
                   [ ... _this.state.othersTwitterMatchGroup || {},
@@ -112,8 +145,14 @@ const MatchingGroup = React.createClass({
 
         });
   },
-
-  onChangeName: function (inputName, event) {
+  /**
+   * fetch the twitter and instagram data, joining the changed info with the others info
+   * @function onChangeName
+   * @author Renan Lazarini Gil
+   * @method event - event to get the target.value
+   * @memberOf MatchingGroup
+   */
+  onChangeName: function (event) {
     let instagramMatchingGroup = Object.assign({}, this.state.actualInstagramMatchGroup);
     instagramMatchingGroup['name'] = event.target.value;
     let twitterMatchingGroup = Object.assign({}, this.state.actualTwitterMatchGroup);
@@ -126,6 +165,12 @@ const MatchingGroup = React.createClass({
     )
   },
 
+  /**
+   * adds a new twitter influencer.
+   * @function addTwitterInfluencer
+   * @author Renan Lazarini Gil
+   * @memberOf MatchingGroup
+   */
   addTwitterInfluencer: function () {
     let twitterMatchingGroup = Object.assign({}, this.state.actualTwitterMatchGroup);
     twitterMatchingGroup['influencers'].push('');
@@ -137,6 +182,12 @@ const MatchingGroup = React.createClass({
 
   },
 
+  /**
+   * adds a new instagram influencer.
+   * @function addInstagramInfluencer
+   * @author Renan Lazarini Gil
+   * @memberOf MatchingGroup
+   */
   addInstagramInfluencer: function () {
     let instagramMatchingGroup = Object.assign({}, this.state.actualInstagramMatchGroup);
     instagramMatchingGroup['influencers'].push('');
@@ -147,6 +198,12 @@ const MatchingGroup = React.createClass({
     )
   },
 
+  /**
+   * adds a new keywords.
+   * @function addKeywords
+   * @author Renan Lazarini Gil
+   * @memberOf MatchingGroup
+   */
   addKeywords: function () {
     let instagramMatchingGroup = Object.assign({}, this.state.actualInstagramMatchGroup);
     instagramMatchingGroup['keywords'].push('');
@@ -159,7 +216,12 @@ const MatchingGroup = React.createClass({
     )
   },
 
-
+  /**
+   * on change any of the twitter influencer
+   * @function onChangeTwitter
+   * @author Renan Lazarini Gil
+   * @memberOf MatchingGroup
+   */
   onChangeTwitter: function (iterator, e) {
     let twitterMatchingGroup = Object.assign({}, this.state.actualTwitterMatchGroup);
     twitterMatchingGroup['influencers'][iterator] = e.target.value;
@@ -170,6 +232,12 @@ const MatchingGroup = React.createClass({
     )
   },
 
+  /**
+   * on change any of the instagram influencer
+   * @function onChangeInstagram
+   * @author Renan Lazarini Gil
+   * @memberOf MatchingGroup
+   */
   onChangeInstagram: function (iterator, e) {
     let instagramMatchingGroup = Object.assign({}, this.state.actualInstagramMatchGroup);
     instagramMatchingGroup['influencers'][iterator] = e.target.value;
@@ -180,6 +248,12 @@ const MatchingGroup = React.createClass({
     )
   },
 
+  /**
+   * on change any of the keywords
+   * @function onChangeKeywords
+   * @author Renan Lazarini Gil
+   * @memberOf MatchingGroup
+   */
   onChangeKeywords: function (iterator, e) {
     let instagramMatchingGroup = Object.assign({}, this.state.actualInstagramMatchGroup);
     instagramMatchingGroup['keywords'][iterator] = e.target.value;
@@ -199,7 +273,7 @@ const MatchingGroup = React.createClass({
           <div className="form-group">
            <label htmlFor="groupNameInput">Group Name</label>
            <input value={this.state.actualTwitterMatchGroup.name}
-                  onChange={this.onChangeName.bind(this, 'matchGroupName')}
+                  onChange={this.onChangeName}
                   type="text"
                   className="form-control"
                   id='groupNameInput'/>

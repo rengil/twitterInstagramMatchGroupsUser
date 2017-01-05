@@ -1,4 +1,12 @@
 import React from 'react';
+var fetch = require('node-fetch');
+
+/**
+ * Represents a list of matching group and action of adding another one
+ *
+ * @class UserMatchingGroups
+ */
+
 
 const UserMatchingGroups = React.createClass({
 
@@ -21,11 +29,23 @@ const UserMatchingGroups = React.createClass({
     }
 
   },
-
+  /**
+   * get the local storage
+   * @function getLocalStorageId
+   * @author Renan Lazarini Gil
+   * @memberOf UserMatchingGroups
+   */
   getLocalStorageId: function () {
     return localStorage.getItem("id");
   },
 
+  /**
+   * gets the union with no repetition of the Instagram and Twitter influencers
+   * @function getUserMatchingGroups
+   * @author Renan Lazarini Gil
+   * @param (string) userConfig : the user information
+   * @memberOf UserMatchingGroups
+   */
   getUserMatchingGroups: function (userConfig) {
     let groupSet = new Set();
     userConfig.twitterMatchGroups.map(function ( twitterMatch ) {
@@ -40,7 +60,13 @@ const UserMatchingGroups = React.createClass({
 
   },
 
-  getMatchGroup: function (name, influencer, keywords) {
+  /**
+   * get the new matching group to be inserted
+   * @function getMatchGroup
+   * @author Renan Lazarini Gil
+   * @memberOf UserMatchingGroups
+   */
+  getMatchGroup: function () {
     const newMatchName = this.state.matchingGroups.length + 1;
     var matchGroup = {
             name: "new matching group " + newMatchName,
@@ -50,6 +76,12 @@ const UserMatchingGroups = React.createClass({
     return matchGroup;
   },
 
+  /**
+   * insert a new match group. For both the Instagram and Twitter JSON
+   * @function addMatchingGroup
+   * @author Renan Lazarini Gil
+   * @memberOf UserMatchingGroups
+   */
   addMatchingGroup: function () {
     const uuid = this.getLocalStorageId();
     const newMatchName = this.state.matchingGroups.length + 1;
@@ -75,15 +107,20 @@ const UserMatchingGroups = React.createClass({
             })
             .then((response) => response)
             .then((response) => {
-              this.props.onAddMatchingGroup("new matching group " + newMatchName);
+              this.props.openMatchingGroup("new matching group " + newMatchName);
               this.props.fetchMatchingGroups();
             });
 
-    this.props.onAddMatchingGroup("new matching group " + newMatchName);
   },
 
+  /**
+   * open a the user matching group for editing. Renders the MatchingGroup component
+   * @function editMatchGroup
+   * @author Renan Lazarini Gil
+   * @memberOf UserMatchingGroups
+   */
   editMatchGroup: function (matchGroup) {
-    this.props.editMatchGroup(matchGroup);
+    this.props.openMatchingGroup(matchGroup);
   },
 
   render: function () {
