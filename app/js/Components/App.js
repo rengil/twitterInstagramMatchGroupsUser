@@ -4,9 +4,9 @@ import MatchingGroup from './MatchingGroup';
 import React from 'react';
 const uuidV1 = require('uuid/v1');
 
-let userConfig = 'http://108.168.180.148/userconfig/';
-
 const App = React.createClass({
+
+  userConfig: 'http://108.168.180.148/userconfig/',
 
   getInitialState: function () {
     return {
@@ -21,12 +21,13 @@ const App = React.createClass({
     }
   },
 
+  // The first I do is to check if the user id exists on my local Storage.
   componentDidMount: function () {
     const uuid = this.getLocalStorageId();
     const userRegistered = this.checkIfUserRegistered(uuid);
-    this.setState({
-      userRegistered
-    });
+    if (userRegistered) {
+      this.fetchUserBasicInformation(uuid);
+    }
   },
 
   checkIfUserRegistered: function (uuid) {
@@ -37,6 +38,10 @@ const App = React.createClass({
       return false;
     }
 
+    return true;
+  },
+
+  fetchUserBasicInformation: function ( uuij ) {
     $.ajax({
        url: "http://108.168.180.148/userconfig/info/" + uuid,
        contentType: "application/json",
@@ -50,21 +55,14 @@ const App = React.createClass({
 
          this.fetchMatchingGroups();
 
-         return true;
        }
     });
-
-    return false;
   },
 
   sendUserInfo: function (data) {
-  const uuid = this.getLocalStorageId() || uuidV1();
+    const uuid = this.getLocalStorageId() || generateAndSaveNewUUID();
 
-  if(!this.getLocalStorageId()){
-    this.setLocalStorageId(uuid);
-  }
-
-  $.ajax({
+    $.ajax({
          url: "http://108.168.180.148/userconfig/info/" + uuid,
          contentType: "application/json",
          type: 'PUT',
@@ -79,6 +77,12 @@ const App = React.createClass({
       });
   },
 
+  generateAndSaveNewUUID: function () {
+    const uuid = uuidV1();
+    this.setLocalStorageId(uuid);
+    return uuid;
+  },
+
   afterEditMatchingGroup: function (matchGroupName) {
     this.fetchMatchingGroups();
     this.editMatchGroup(matchGroupName);
@@ -87,7 +91,7 @@ const App = React.createClass({
   fetchMatchingGroups: function ( ) {
     const uuid = this.getLocalStorageId();
     $.ajax({
-       url: userConfig + uuid,
+       url: this.userConfig + uuid,
        contentType: "application/json",
        type: 'GET',
        success: (userConfig) => {
@@ -130,9 +134,11 @@ const App = React.createClass({
   },
 
   render: function () {
+    // This for avoid showing the message before the request arrive
     if(!this.state.userInfoArrived){
       return  (<div> </div>)
     }
+
     return (
       <div className='container-fluid'>
         {!this.state.userRegistered ?
@@ -140,28 +146,32 @@ const App = React.createClass({
              Hello, and welcome to our app. First we need you to write your information in the left. Then you will start using our app. Dont you worry, you can change any time this info
           </p> : ''
         }
-        <div className=" first-row row">
+
+        <div className="first-row row">
 
           <div className="col-md-1"> </div>
+
           <div className="col-md-3">
             <UserRegister userInformation={this.state.userInformation}
                           sendUserInfo={this.sendUserInfo}
                           RegisterUser={this.onRegisterUser}/>
           </div>
+
           <div className="col-md-1"> </div>
+
           <div className="col-md-6">
-          {this.state.userRegistered
-              ? <UserMatchingGroups
-                    userConfig={this.state.userConfig}
-                    editMatchGroup={this.editMatchGroup}
-                    onAddMatchingGroup={this.onAddMatchingGroup}/>
-              : ''
-          }
-          <div className="col-md-1"> </div>
+              {this.state.userRegistered
+                  ? <UserMatchingGroups
+                        userConfig={this.state.userConfig}
+                        editMatchGroup={this.editMatchGroup}
+                        onAddMatchingGroup={this.onAddMatchingGroup}/>
+                  : ''
+              }
           </div>
+          <div className="col-md-1"> </div>
         </div>
 
-          {this.state.openMatchingGroup ?
+        {this.state.openMatchingGroup ?
           <div className="second-row row">
             <div className="col-md-1"> </div>
             <div id='matching-group' className="col-md-10">
@@ -172,8 +182,8 @@ const App = React.createClass({
             <div className="col-md-1"> </div>
           </div>
           : ''
-          }
-        </div>
+        }
+      </div>
     )
   }
 });

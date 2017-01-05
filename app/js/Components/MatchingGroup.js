@@ -26,7 +26,7 @@ const MatchingGroup = React.createClass({
       matchGroupName: nextProps.matchGroupName
     })
 
-    this.scrollAnimation();
+    //this.scrollAnimation();
     this.fetchMatchingGroups();
   },
 
