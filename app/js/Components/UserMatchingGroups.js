@@ -44,8 +44,8 @@ const UserMatchingGroups = React.createClass({
     const newMatchName = this.state.matchingGroups.length + 1;
     var matchGroup = {
             name: "new matching group " + newMatchName,
-            influencers: ['string'],
-            keywords: ['string']
+            influencers: [' '],
+            keywords: [' ']
     };
     return matchGroup;
   },

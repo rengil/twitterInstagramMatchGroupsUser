@@ -17,6 +17,7 @@ const MatchingGroup = React.createClass({
   },
 
   componentDidMount: function () {
+    this.scrollAnimation();
     this.fetchMatchingGroups();
   },
 
@@ -25,7 +26,15 @@ const MatchingGroup = React.createClass({
       matchGroupName: nextProps.matchGroupName
     })
 
+    this.scrollAnimation();
     this.fetchMatchingGroups();
+  },
+
+  scrollAnimation: function () {
+    var doc = document.getElementById('matching-group');
+    var rect = doc.getBoundingClientRect();
+    var body = $("html, body");
+    $("html, body").animate({ scrollTop: rect.top}, 200)
   },
 
   fetchMatchingGroups: function ( ) {
@@ -198,34 +207,37 @@ const MatchingGroup = React.createClass({
         <div className='row matching-group'>
           <div className="col-md-4">
               <label  htmlFor="groupNameInput">Twitter Influencer</label>
-              <i onClick={this.addTwitterInfluencer} className="material-icons clickable">add</i>
+
               {this.state.actualTwitterMatchGroup.influencers
                 && this.state.actualTwitterMatchGroup.influencers.map(function (influencer, iterator) {
                 return (<input type="text" onChange={this.onChangeTwitter.bind(this, iterator)}
                                className="form-control" value={influencer} />)
               }.bind(this))
               }
+              <div onClick={this.addTwitterInfluencer} className='icon-text-clickable'> <i className="material-icons clickable">add</i> <span> Add </span> </div>
 
           </div>
 
           <div className="col-md-4">
               <label htmlFor="groupNameInput">Instagram Influencer</label>
-              <i onClick={this.addInstagramInfluencer}  className="material-icons clickable">add</i>
+
               {this.state.actualInstagramMatchGroup.influencers
                 && this.state.actualInstagramMatchGroup.influencers.map(function (influencer, iterator) {
                  return (<input onChange={this.onChangeInstagram.bind(this, iterator)} type="text" className="form-control" value={influencer}  />)
                }.bind(this))
               }
+              <div onClick={this.addInstagramInfluencer} className='icon-text-clickable'> <i className="material-icons clickable">add</i> <span> Add </span> </div>
           </div>
 
           <div className="col-md-4">
               <label htmlFor="groupNameInput">Keywords</label>
-              <i onClick={this.addKeywords}  className="material-icons clickable">add</i>
+
               {this.state.actualInstagramMatchGroup.keywords
                 && this.state.actualInstagramMatchGroup.keywords.map(function (keyword, iterator) {
                  return (<input onChange={this.onChangeKeywords.bind(this, iterator)} type="text" className="form-control" value={keyword}  />)
                }.bind(this))
               }
+              <div onClick={this.addKeywords} className='icon-text-clickable'> <i className="material-icons clickable">add</i> <span> Add </span> </div>
           </div>
 
         </div>

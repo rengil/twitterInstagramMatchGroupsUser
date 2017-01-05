@@ -126,6 +126,7 @@ const App = React.createClass({
       openMatchingGroup: true,
       matchGroupName: matchGroupName
     });
+
   },
 
   render: function () {
@@ -163,7 +164,7 @@ const App = React.createClass({
           {this.state.openMatchingGroup ?
           <div className="second-row row">
             <div className="col-md-1"> </div>
-            <div className="col-md-10">
+            <div id='matching-group' className="col-md-10">
               <MatchingGroup
                afterEditMatchingGroup={this.afterEditMatchingGroup}
                matchGroupName={this.state.matchGroupName}/>
