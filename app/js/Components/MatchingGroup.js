@@ -111,8 +111,6 @@ const MatchingGroup = React.createClass({
     this.setState({
       actualInstagramMatchGroup: instagramMatchingGroup, actualTwitterMatchGroup: twitterMatchingGroup}, function () {
         this.updateMatchingGroup();
-        this.props.afterEditMatchingGroup(instagramMatchingGroup['name']);
-        this.fetchMatchingGroups();
       }
     )
   },
