@@ -10,6 +10,7 @@ const MatchingGroup = React.createClass({
       matchGroupName: this.props.matchGroupName,
       actualTwitterMatchGroup: {},
       actualInstagramMatchGroup: {},
+      actualKeywords: {},
       othersTwitterMatchGroup: [],
       othersInstagramMatchGroup: []
     }
@@ -79,12 +80,7 @@ const MatchingGroup = React.createClass({
   },
 
   updateMatchingGroup: function () {
-    let matchingGroupTwitter = Object.assign({} ,  this.state.actualTwitterMatchGroup);
-    let matchingGroupInstagram = Object.assign({} ,  this.state.actualInstagramMatchGroup);
     let _this = this;
-
-    matchingGroupTwitter['name'] = this.state.matchGroupName;
-    matchingGroupInstagram['name'] = this.state.matchGroupName;
 
     const uuid = this.getLocalStorageId();
 
@@ -95,11 +91,11 @@ const MatchingGroup = React.createClass({
            data:  JSON.stringify({
               "twitterMatchGroups":
                  [ ... _this.state.othersTwitterMatchGroup || {},
-                 matchingGroupTwitter
+                 this.state.actualTwitterMatchGroup
                ],
               "instagramMatchGroups":
                 [ ... _this.state.othersInstagramMatchGroup || {},
-                matchingGroupInstagram
+                this.state.actualInstagramMatchGroup
               ]
             }),
            success: (response) => {
@@ -108,13 +104,17 @@ const MatchingGroup = React.createClass({
     });
   },
 
-  onChangeInput: function (inputName, event) {
-    const newState = Object.assign({},this.state);
-    const _this = this;
-    newState[inputName] = event.target.value;
-    this.setState(
-      newState, function () {
-        this.updateMatchingGroup()
+  onChangeName: function (inputName, event) {
+    let instagramMatchingGroup = Object.assign({}, this.state.actualInstagramMatchGroup);
+    instagramMatchingGroup['name'] = event.target.value;
+    let twitterMatchingGroup = Object.assign({}, this.state.actualTwitterMatchGroup);
+    twitterMatchingGroup['name'] = event.target.value;
+
+    this.setState({
+      actualInstagramMatchGroup: instagramMatchingGroup, actualTwitterMatchGroup: twitterMatchingGroup}, function () {
+        this.updateMatchingGroup();
+        this.props.afterEditMatchingGroup(this.state.matchGroupName);
+        this.fetchMatchingGroups();
       }
     )
   },
@@ -140,6 +140,19 @@ const MatchingGroup = React.createClass({
     )
   },
 
+  addKeywords: function () {
+    let instagramMatchingGroup = Object.assign({}, this.state.actualInstagramMatchGroup);
+    instagramMatchingGroup['keywords'].push('');
+    let twitterMatchingGroup = Object.assign({}, this.state.actualTwitterMatchGroup);
+    twitterMatchingGroup['keywords'].push('');
+    this.setState({
+      actualInstagramMatchGroup: instagramMatchingGroup, actualTwitterMatchGroup: twitterMatchingGroup }, function () {
+        this.updateMatchingGroup()
+      }
+    )
+  },
+
+
   onChangeTwitter: function (iterator, e) {
     let twitterMatchingGroup = Object.assign({}, this.state.actualTwitterMatchGroup);
     twitterMatchingGroup['influencers'][iterator] = e.target.value;
@@ -148,7 +161,6 @@ const MatchingGroup = React.createClass({
         this.updateMatchingGroup()
       }
     )
-
   },
 
   onChangeInstagram: function (iterator, e) {
@@ -159,7 +171,16 @@ const MatchingGroup = React.createClass({
         this.updateMatchingGroup()
       }
     )
+  },
 
+  onChangeKeywords: function (iterator, e) {
+    let instagramMatchingGroup = Object.assign({}, this.state.actualInstagramMatchGroup);
+    instagramMatchingGroup['keywords'][iterator] = e.target.value;
+    this.setState({
+      actualInstagramMatchGroup: instagramMatchingGroup}, function () {
+        this.updateMatchingGroup()
+      }
+    )
   },
 
   render: function () {
@@ -170,8 +191,8 @@ const MatchingGroup = React.createClass({
 
           <div className="form-group">
            <label htmlFor="groupNameInput">Group Name</label>
-           <input value={this.state.matchGroupName}
-                  onChange={this.onChangeInput.bind(this, 'matchGroupName')}
+           <input value={this.state.actualTwitterMatchGroup.name}
+                  onChange={this.onChangeName.bind(this, 'matchGroupName')}
                   type="text"
                   className="form-control"
                   id='groupNameInput'/>
@@ -197,6 +218,16 @@ const MatchingGroup = React.createClass({
               {this.state.actualInstagramMatchGroup.influencers
                 && this.state.actualInstagramMatchGroup.influencers.map(function (influencer, iterator) {
                  return (<input onChange={this.onChangeInstagram.bind(this, iterator)} type="text" className="form-control" value={influencer}  />)
+               }.bind(this))
+              }
+          </div>
+
+          <div className="col-md-4">
+              <label htmlFor="groupNameInput">Keywords</label>
+              <i onClick={this.addKeywords}  className="material-icons clickable">add</i>
+              {this.state.actualInstagramMatchGroup.keywords
+                && this.state.actualInstagramMatchGroup.keywords.map(function (keyword, iterator) {
+                 return (<input onChange={this.onChangeKeywords.bind(this, iterator)} type="text" className="form-control" value={keyword}  />)
                }.bind(this))
               }
           </div>

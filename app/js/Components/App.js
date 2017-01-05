@@ -4,6 +4,8 @@ import MatchingGroup from './MatchingGroup';
 import React from 'react';
 const uuidV1 = require('uuid/v1');
 
+let userConfig = 'http://108.168.180.148/userconfig/';
+
 const App = React.createClass({
 
   getInitialState: function () {
@@ -15,7 +17,7 @@ const App = React.createClass({
         lastName: '',
         firstName: '',
         email: ''
-      }
+      },
     }
   },
 
@@ -31,7 +33,7 @@ const App = React.createClass({
     if(!uuid) {
       this.setState({
         userInfoArrived: true
-      })
+      });
       return false;
     }
 
@@ -45,6 +47,8 @@ const App = React.createClass({
            userRegistered: true,
            userInfoArrived: true
          })
+
+         this.fetchMatchingGroups();
 
          return true;
        }
@@ -75,6 +79,25 @@ const App = React.createClass({
       });
   },
 
+  afterEditMatchingGroup: function (matchGroupName) {
+    this.fetchMatchingGroups();
+  },
+
+  fetchMatchingGroups: function ( ) {
+    const uuid = this.getLocalStorageId();
+    $.ajax({
+       url: userConfig + uuid,
+       contentType: "application/json",
+       type: 'GET',
+       success: (userConfig) => {
+        this.setState({
+          userConfig,
+          loadedMatchingGroups: true
+        });
+       }
+    });
+  },
+
   getLocalStorageId: function () {
     return localStorage.getItem("id");
   },
@@ -87,6 +110,7 @@ const App = React.createClass({
     this.setState({
       userRegistered: true
     });
+    this.fetchMatchingGroups();
   },
 
   onAddMatchingGroup: function (newMatchName) {
@@ -126,6 +150,7 @@ const App = React.createClass({
           <div className="col-md-6">
           {this.state.userRegistered
               ? <UserMatchingGroups
+                    userConfig={this.state.userConfig}
                     editMatchGroup={this.editMatchGroup}
                     onAddMatchingGroup={this.onAddMatchingGroup}/>
               : ''
@@ -138,7 +163,10 @@ const App = React.createClass({
           <div className="row">
             <div className="col-md-1"> </div>
             <div className="col-md-10">
-              <MatchingGroup matchGroupName={this.state.matchGroupName}/>
+              <MatchingGroup
+
+               afterEditMatchingGroup={this.afterEditMatchingGroup}
+               matchGroupName={this.state.matchGroupName}/>
             </div>
             <div className="col-md-1"> </div>
           </div>

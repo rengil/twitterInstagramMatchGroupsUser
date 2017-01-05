@@ -1,38 +1,24 @@
 import React from 'react';
 
-let userConfig = 'http://108.168.180.148/userconfig/';
-
 const UserMatchingGroups = React.createClass({
 
   getInitialState: function () {
     return {
         matchingGroups: [],
-        loadedMatchingGroups: false,
-        userConfig: undefined,
     }
 
   },
 
   componentDidMount: function () {
-    this.fetchMatchingGroups();
+    if (this.props.userConfig && this.props.userConfig.twitterMatchGroups && this.props.userConfig.instagramMatchGroups) {
+      this.getUserMatchingGroups(this.props.userConfig);
+    }
   },
 
-  fetchMatchingGroups: function ( ) {
-    const uuid = this.getLocalStorageId();
-    $.ajax({
-       url: userConfig + uuid,
-       contentType: "application/json",
-       type: 'GET',
-       success: (userConfig) => {
-        this.setState({
-          userConfig,
-          loadedMatchingGroups: true
-        });
-        if (userConfig.twitterMatchGroups && userConfig.instagramMatchGroups) {
-          this.getUserMatchingGroups(userConfig);
-        }
-       }
-    });
+  componentWillReceiveProps: function (nextProps) {
+    if (nextProps.userConfig && nextProps.userConfig.twitterMatchGroups && nextProps.userConfig.instagramMatchGroups) {
+      this.getUserMatchingGroups(nextProps.userConfig);
+    }
 
   },
 
@@ -58,12 +44,10 @@ const UserMatchingGroups = React.createClass({
     const newMatchName = this.state.matchingGroups.length + 1;
     var matchGroup = {
             name: "new matching group " + newMatchName,
-            influencers: ["string"],
-            keywords: ["string"]
+            influencers: ['string'],
+            keywords: ['string']
     };
     return matchGroup;
-
-
   },
 
   addMatchingGroup: function () {
@@ -76,11 +60,11 @@ const UserMatchingGroups = React.createClass({
            type: 'PUT',
            data:  JSON.stringify({
               "twitterMatchGroups":
-                 [ ... this.state.userConfig.twitterMatchGroups || {},
+                 [ ... this.props.userConfig.twitterMatchGroups || {},
                  this.getMatchGroup()
                ],
               "instagramMatchGroups":
-                [ ... this.state.userConfig.instagramMatchGroups || {},
+                [ ... this.props.userConfig.instagramMatchGroups || {},
                 this.getMatchGroup()
               ]
             }),
@@ -98,7 +82,7 @@ const UserMatchingGroups = React.createClass({
   },
 
   render: function () {
-    if (!this.state.loadedMatchingGroups) {
+    if (!this.state.matchingGroups) {
       return (<div> </div>)
     }
     return (
