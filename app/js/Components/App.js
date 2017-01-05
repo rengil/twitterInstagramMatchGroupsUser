@@ -81,6 +81,7 @@ const App = React.createClass({
 
   afterEditMatchingGroup: function (matchGroupName) {
     this.fetchMatchingGroups();
+    this.editMatchGroup(matchGroupName);
   },
 
   fetchMatchingGroups: function ( ) {
@@ -138,7 +139,7 @@ const App = React.createClass({
              Hello, and welcome to our app. First we need you to write your information in the left. Then you will start using our app. Dont you worry, you can change any time this info
           </p> : ''
         }
-        <div className=" my-app row">
+        <div className=" first-row row">
 
           <div className="col-md-1"> </div>
           <div className="col-md-3">
@@ -160,11 +161,10 @@ const App = React.createClass({
         </div>
 
           {this.state.openMatchingGroup ?
-          <div className="row">
+          <div className="second-row row">
             <div className="col-md-1"> </div>
             <div className="col-md-10">
               <MatchingGroup
-
                afterEditMatchingGroup={this.afterEditMatchingGroup}
                matchGroupName={this.state.matchGroupName}/>
             </div>

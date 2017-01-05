@@ -86,13 +86,13 @@ const UserMatchingGroups = React.createClass({
       return (<div> </div>)
     }
     return (
-      <div className='page-content'>
+      <div className='page-content user-matching-groups'>
         <h2> Your matching groups </h2>
-        <div className='user-matching-groups'>
+        <div className='groups'>
           <table className='table'>
             <thead>
               <tr>
-                <th> Matching Group </th>
+                <th>  </th>
               </tr>
             </thead>
 
@@ -110,7 +110,7 @@ const UserMatchingGroups = React.createClass({
           </table>
         </div>
 
-        <button onClick={this.addMatchingGroup} type="button" className="btn"> ADD MATCHING GROUP </button>
+        <button onClick={this.addMatchingGroup} type="button"> ADD MATCHING GROUP </button>
       </div>
     )
   }

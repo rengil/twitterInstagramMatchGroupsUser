@@ -46,7 +46,6 @@ const MatchingGroup = React.createClass({
   },
 
   splitThisMatchingGroupsFromOthers: function (userConfig) {
-    let groupSet = new Set();
     let actualTwitterMatchGroup = {},
         actualInstagramMatchGroup = {},
         othersTwitterMatchGroup = [],
@@ -70,7 +69,6 @@ const MatchingGroup = React.createClass({
     }.bind(this));
 
     this.setState({
-      matchingGroups: [...groupSet],
       actualTwitterMatchGroup,
       actualInstagramMatchGroup,
       othersTwitterMatchGroup,
@@ -113,7 +111,7 @@ const MatchingGroup = React.createClass({
     this.setState({
       actualInstagramMatchGroup: instagramMatchingGroup, actualTwitterMatchGroup: twitterMatchingGroup}, function () {
         this.updateMatchingGroup();
-        this.props.afterEditMatchingGroup(this.state.matchGroupName);
+        this.props.afterEditMatchingGroup(instagramMatchingGroup['name']);
         this.fetchMatchingGroups();
       }
     )
@@ -231,6 +229,7 @@ const MatchingGroup = React.createClass({
                }.bind(this))
               }
           </div>
+
         </div>
 
       </div>

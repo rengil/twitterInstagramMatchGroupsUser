@@ -26,7 +26,7 @@ const UserRegister = React.createClass({
   render: function () {
     return (
       <div>
-      <div className='page-content'>
+      <div className='page-content user-information'>
         <h2> Your informations </h2>
         <form className='user-info'>
           <div className="form-group">
