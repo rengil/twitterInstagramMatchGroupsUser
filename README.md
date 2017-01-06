@@ -29,5 +29,7 @@
 ### How to use it
 
   Just npm install and npm start should get the app going in http://localhost:8889/
+  
+  npm test for the chai tests
 
 
