@@ -157,4 +157,10 @@ const UserMatchingGroups = React.createClass({
   }
 });
 
+UserMatchingGroups.defaultProps = {
+  userConfig: [],
+  openMatchingGroup: function () {},
+  fetchMatchingGroups: function () {}
+}
+
 module.exports = UserMatchingGroups;

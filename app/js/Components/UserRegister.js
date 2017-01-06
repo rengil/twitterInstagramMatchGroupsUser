@@ -82,4 +82,15 @@ const UserRegister = React.createClass({
   }
 });
 
+UserRegister.defaultProps = {
+  userInformation: {
+    firstName: '',
+    lastName: '',
+    email: ''
+  },
+  sendUserInfo: function () {
+
+  }
+}
+
 module.exports = UserRegister;

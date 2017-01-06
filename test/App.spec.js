@@ -41,35 +41,35 @@ describe('<App />', () => {
   });
 
 
-    it(' when record local storage uuid , it should get the same value', () => {
-      const wrapper = shallow(<App />);
-      wrapper.instance().setLocalStorageId(11);
-      expect(wrapper.instance().getLocalStorageId()).to.equal('11');
-    });
+  it(' when record local storage uuid , it should get the same value', () => {
+   const wrapper = shallow(<App />);
+    wrapper.instance().setLocalStorageId(11);
+    expect(wrapper.instance().getLocalStorageId()).to.equal('11');
+  });
 
-    it(' given uuid should give you information', (done) => {
-      const wrapper = shallow(<App />);
-      let data = {
-        firstName: 'chai',
-        secondName: 'jasmine',
-        email: 'chai@test.com.br'
-      }
-      wrapper.instance().fethInsertUserBasicInfo(data, 'c0e010c0-d390-11e6-953a-573fa9b67d9f').then(
-      function (result) {
-        wrapper.instance().fetchUserBasicInformation('c0e010c0-d390-11e6-953a-573fa9b67d9f').then(
-        function (result) {
-            expect(result.firstName).to.equal('chai');
-            done();
-        },
-        function (err) {
-           done(err);
-        });
-        done();
-      },
-
-      function (err) {
-         done(err);
-      });
+  it(' given a insert fetch in basic info. Should get the same data,  ', (done) => {
+    const wrapper = shallow(<App />);
+    let data = {
+      firstName: 'chai',
+      lastName: 'jasmine',
+      email: 'chai@test.com.br'
+    }
+    wrapper.instance().fethInsertUserBasicInfo(data, 'c0e010c0-d390-11e6-953a-573fa9b67d9f').then(
+    function (result) {
+    wrapper.instance().fetchUserBasicInformation('c0e010c0-d390-11e6-953a-573fa9b67d9f').then(
+    function (result) {
+      expect(result.firstName).to.equal('chai');
+      done();
+    },
+    function (err) {
+     done(err);
     });
+      done();
+    },
+
+    function (err) {
+       done(err);
+    });
+  });
 
 });

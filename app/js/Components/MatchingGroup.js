@@ -323,4 +323,8 @@ const MatchingGroup = React.createClass({
   }
 });
 
+MatchingGroup.defaultProps = {
+  matchGroupName: [],
+}
+
 module.exports = MatchingGroup;

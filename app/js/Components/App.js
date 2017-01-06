@@ -89,8 +89,8 @@ const App = React.createClass({
   },
 
   /**
-   * Save the user informations
-   * @function fetchUserBasicInformation
+   * Send the User Information
+   * @function sendUserInfo
    * @author Renan Lazarini Gil
    * @param {object} data - email, firstName and lastName of the user
    * @memberOf App
@@ -98,11 +98,18 @@ const App = React.createClass({
   sendUserInfo: function (data) {
     const uuid = this.getLocalStorageId() || this.generateAndSaveNewUUID();
 
-    fethInsertUserBasicInfo(data, uuid).then(response => {
+    this.fethInsertUserBasicInfo(data, uuid).then(response => {
       this.onRegisterUser();
     });
   },
 
+  /**
+   * Save the user informations
+   * @function fethInsertUserBasicInfo
+   * @author Renan Lazarini Gil
+   * @param {object} data - email, firstName and lastName of the user
+   * @memberOf App
+   */
   fethInsertUserBasicInfo: function (data, uuid) {
     return fetch("http://108.168.180.148/userconfig/info/" + uuid, {
             method: 'PUT',
