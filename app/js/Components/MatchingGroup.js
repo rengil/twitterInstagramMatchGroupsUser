@@ -271,6 +271,10 @@ const MatchingGroup = React.createClass({
     )
   },
 
+  preventOnChange: function () {
+
+  },
+
   render: function () {
     return (
       <div className='page-content'>
@@ -280,7 +284,10 @@ const MatchingGroup = React.createClass({
           <div className="form-group">
            <label htmlFor="groupNameInput">Group Name</label>
            <input value={this.state.actualTwitterMatchGroup.name}
-                  onChange={this.onChangeName}
+                  onChange={this.preventOnChange}
+                  onKeypress={this.onChangeName}
+                  onPaste={this.onChangeName}
+                  onInput={this.onChangeName}
                   type="text"
                   className="form-control"
                   id='groupNameInput'/>
@@ -293,7 +300,11 @@ const MatchingGroup = React.createClass({
 
               {this.state.actualTwitterMatchGroup.influencers
                 && this.state.actualTwitterMatchGroup.influencers.map(function (influencer, iterator) {
-                return (<input key={'twitter' + iterator} type="text" onChange={this.onChangeTwitter.bind(this, iterator)}
+                return (<input key={'twitter' + iterator}
+                               type="text" onChange={this.preventOnChange}
+                               onInput={this.onChangeTwitter.bind(this, iterator)}
+                               onKeypress={this.onChangeTwitter.bind(this, iterator)}
+                               onPaste={this.onChangeTwitter.bind(this, iterator)}
                                className="form-control" value={influencer} />)
               }.bind(this))
               }
@@ -306,7 +317,13 @@ const MatchingGroup = React.createClass({
 
               {this.state.actualInstagramMatchGroup.influencers
                 && this.state.actualInstagramMatchGroup.influencers.map(function (influencer, iterator) {
-                 return (<input key={'instagram' + iterator} onChange={this.onChangeInstagram.bind(this, iterator)} type="text" className="form-control" value={influencer}  />)
+                 return (<input key={'instagram' + iterator}
+                               onChange={this.preventOnChange}
+                               onInput={this.onChangeInstagram.bind(this, iterator)}
+                               onKeypress={this.onChangeInstagram.bind(this, iterator)}
+                               onPaste={this.onChangeInstagram.bind(this, iterator)}
+                               type="text" className="form-control"
+                               value={influencer}  />)
                }.bind(this))
               }
               <div onClick={this.addInstagramInfluencer} className='icon-text-clickable'> <i className="material-icons clickable">add</i> <span> Add </span> </div>
@@ -317,7 +334,13 @@ const MatchingGroup = React.createClass({
 
               {this.state.actualInstagramMatchGroup.keywords
                 && this.state.actualInstagramMatchGroup.keywords.map(function (keyword, iterator) {
-                 return (<input key={'keywords' + iterator} onChange={this.onChangeKeywords.bind(this, iterator)} type="text" className="form-control" value={keyword}  />)
+                 return (<input key={'keywords' + iterator}
+                               onChange={this.preventOnChange}
+                               onInput={this.onChangeKeywords.bind(this, iterator)}
+                               onKeypress={this.onChangeKeywords.bind(this, iterator)}
+                               onPaste={this.onChangeKeywords.bind(this, iterator)}
+                                type="text" className="form-control"
+                                value={keyword}  />)
                }.bind(this))
               }
               <div onClick={this.addKeywords} className='icon-text-clickable'> <i className="material-icons clickable">add</i> <span> Add </span> </div>
