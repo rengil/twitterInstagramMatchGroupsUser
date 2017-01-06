@@ -33,7 +33,15 @@ const App = React.createClass({
     const uuid = this.getLocalStorageId();
     const userRegistered = this.checkIfUserRegistered(uuid);
     if (userRegistered) {
-      this.fetchUserBasicInformation(uuid);
+      this.fetchUserBasicInformation(uuid).then(userInformation => {
+        this.setState({
+          userInformation,
+          userRegistered: true,
+          userInfoArrived: true
+        })
+
+        this.fetchMatchingGroups();
+      });
     }
   },
 
@@ -64,25 +72,20 @@ const App = React.createClass({
    * @memberOf App
    */
   fetchUserBasicInformation: function ( uuid ) {
-    fetch("http://108.168.180.148/userconfig/info/" + uuid, {
+
+    return fetch("http://108.168.180.148/userconfig/info/" + uuid, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'same-origin',
         })
-        .then((response) => response.json())
-        .then((userInformation) => {
-          this.setState({
-            userInformation,
-            userRegistered: true,
-            userInfoArrived: true
-          })
-
-          this.fetchMatchingGroups();
-
-        });
-
+        .then((response) =>
+          response.json()
+        )
+        .then((userInformation) =>
+          userInformation
+        );
   },
 
   /**
@@ -95,7 +98,13 @@ const App = React.createClass({
   sendUserInfo: function (data) {
     const uuid = this.getLocalStorageId() || this.generateAndSaveNewUUID();
 
-    fetch("http://108.168.180.148/userconfig/info/" + uuid, {
+    fethInsertUserBasicInfo(data, uuid).then(response => {
+      this.onRegisterUser();
+    });
+  },
+
+  fethInsertUserBasicInfo: function (data, uuid) {
+    return fetch("http://108.168.180.148/userconfig/info/" + uuid, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -103,15 +112,15 @@ const App = React.createClass({
             },
             credentials: 'same-origin',
             body: JSON.stringify({
-              	"email": data.email ,
-              	"firstName": data.firstName,
+                "email": data.email ,
+                "firstName": data.firstName,
                "lastName": data.lastName
             }),
         })
         .then((response) => response)
-        .then((response) => {
-          this.onRegisterUser();
-        });
+        .then((response) =>
+          response
+        );
   },
 
   /**
@@ -134,17 +143,24 @@ const App = React.createClass({
    */
   fetchMatchingGroups: function ( ) {
     const uuid = this.getLocalStorageId();
-    $.ajax({
-       url: this.userConfig + uuid,
-       contentType: "application/json",
-       type: 'GET',
-       success: (userConfig) => {
-        this.setState({
-          userConfig,
-          loadedMatchingGroups: true
+
+    fetch(this.userConfig + uuid, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
+        })
+        .then((response) => response.json())
+        .then((userConfig) => {
+          this.setState({
+            userConfig,
+            loadedMatchingGroups: true
+          });
         });
-       }
-    });
+
+
   },
 
   /**
