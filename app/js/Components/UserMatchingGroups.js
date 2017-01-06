@@ -6,7 +6,7 @@ var fetch = require('node-fetch');
  *
  * @class UserMatchingGroups
  */
-
+let userConfig = 'http://108.168.180.148/userconfig/';
 
 const UserMatchingGroups = React.createClass({
 
@@ -84,33 +84,49 @@ const UserMatchingGroups = React.createClass({
    */
   addMatchingGroup: function () {
     const uuid = this.getLocalStorageId();
+
+    fetch(userConfig + uuid, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
+        })
+        .then((response) => response.json())
+        .then((userConfig) => {
+            this.fetchAddMatchingGroup(uuid, userConfig);
+
+      })
+
+
+  },
+
+  fetchAddMatchingGroup: function (uuid, userConfig) {
     const newMatchName = this.state.matchingGroups.length + 1;
-
-
-        fetch("http://108.168.180.148/userconfig/" + uuid, {
-                method: 'PUT',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin', // you need to add this line
-                body: JSON.stringify({
-                   "twitterMatchGroups":
-                      [ ... this.props.userConfig.twitterMatchGroups || {},
-                      this.getMatchGroup()
-                    ],
-                   "instagramMatchGroups":
-                     [ ... this.props.userConfig.instagramMatchGroups || {},
-                     this.getMatchGroup()
-                   ]
-                 }),
-            })
-            .then((response) => response)
-            .then((response) => {
-              this.props.openMatchingGroup("new matching group " + newMatchName);
-              this.props.fetchMatchingGroups();
-            });
-
+    fetch("http://108.168.180.148/userconfig/" + uuid, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin', // you need to add this line
+            body: JSON.stringify({
+               "twitterMatchGroups":
+                  [ ... userConfig.twitterMatchGroups || {},
+                  this.getMatchGroup()
+                ],
+               "instagramMatchGroups":
+                 [ ... userConfig.instagramMatchGroups || {},
+                 this.getMatchGroup()
+               ]
+             }),
+        })
+        .then((response) => response)
+        .then((response) => {
+          this.props.openMatchingGroup("new matching group " + newMatchName);
+          this.props.fetchMatchingGroups();
+        });
   },
 
   /**
