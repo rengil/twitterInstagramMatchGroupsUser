@@ -139,8 +139,8 @@ const UserMatchingGroups = React.createClass({
             </thead>
 
             <tbody>
-              {this.state.matchingGroups.map(function (matchingGroup){
-              return (<tr>
+              {this.state.matchingGroups.map(function (matchingGroup, iterator){
+              return (<tr key={'matching-group' + iterator}>
                 <td> {matchingGroup} </td>
                 <td> <i onClick={this.editMatchGroup.bind(this, matchingGroup)} className="material-icons clickable">mode_edit</i> </td>
               </tr>)

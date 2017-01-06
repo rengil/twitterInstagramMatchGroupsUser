@@ -166,8 +166,6 @@ const App = React.createClass({
             loadedMatchingGroups: true
           });
         });
-
-
   },
 
   /**
@@ -260,6 +258,7 @@ const App = React.createClass({
             <div className="col-md-1"> </div>
             <div id='matching-group' className="col-md-10">
               <MatchingGroup
+               fetchMatchingGroups={this.fetchMatchingGroups}
                matchGroupName={this.state.matchGroupName}/>
             </div>
             <div className="col-md-1"> </div>
