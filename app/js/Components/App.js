@@ -25,6 +25,7 @@ const App = React.createClass({
         firstName: '',
         email: ''
       },
+      userIsTyping: undefined
     }
   },
 
@@ -89,7 +90,7 @@ const App = React.createClass({
   },
 
   /**
-   * Send the User Information
+   * Send the User Information. The timeout will always restart when the user is typing
    * @function sendUserInfo
    * @author Renan Lazarini Gil
    * @param {object} data - email, firstName and lastName of the user
@@ -98,9 +99,20 @@ const App = React.createClass({
   sendUserInfo: function (data) {
     const uuid = this.getLocalStorageId() || this.generateAndSaveNewUUID();
 
-    this.fethInsertUserBasicInfo(data, uuid).then(response => {
-      this.onRegisterUser();
-    });
+    if (this.state.userIsTyping) {
+        clearTimeout(this.state.userIsTyping);
+    }
+
+    this.setState(
+      {
+        userIsTyping:   setTimeout( ()  => {
+          this.fethInsertUserBasicInfo(data, uuid).then(response => {
+            this.onRegisterUser();
+          });
+        }, 750)
+
+      });
+
   },
 
   /**

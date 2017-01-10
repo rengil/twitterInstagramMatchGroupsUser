@@ -165,9 +165,17 @@ const MatchingGroup = React.createClass({
     let twitterMatchingGroup = Object.assign({}, this.state.actualTwitterMatchGroup);
     twitterMatchingGroup['name'] = event.target.value;
 
+
+    if (this.state.changingName) {
+        clearTimeout(this.state.changingName);
+    }
+
     this.setState({
-      actualInstagramMatchGroup: instagramMatchingGroup, actualTwitterMatchGroup: twitterMatchingGroup}, function () {
-        this.updateMatchingGroup(true);
+        actualInstagramMatchGroup: instagramMatchingGroup,
+        actualTwitterMatchGroup: twitterMatchingGroup,
+        changingName:   setTimeout( ()  => {
+            this.updateMatchingGroup(true);
+        }, 750)
       }
     )
   },
@@ -232,11 +240,17 @@ const MatchingGroup = React.createClass({
   onChangeTwitter: function (iterator, e) {
     let twitterMatchingGroup = Object.assign({}, this.state.actualTwitterMatchGroup);
     twitterMatchingGroup['influencers'][iterator] = e.target.value;
+
+    if (this.state.changingTwitter) {
+        clearTimeout(this.state.changingTwitter);
+    }
+
     this.setState({
-      actualTwitterMatchGroup: twitterMatchingGroup}, function () {
-        this.updateMatchingGroup()
-      }
-    )
+      actualTwitterMatchGroup: twitterMatchingGroup,
+      changingTwitter:   setTimeout( ()  => {
+          this.updateMatchingGroup(true);
+      }, 750)
+    });
   },
 
   /**
@@ -248,11 +262,17 @@ const MatchingGroup = React.createClass({
   onChangeInstagram: function (iterator, e) {
     let instagramMatchingGroup = Object.assign({}, this.state.actualInstagramMatchGroup);
     instagramMatchingGroup['influencers'][iterator] = e.target.value;
+
+    if (this.state.changingInstagram) {
+        clearTimeout(this.state.changingInstagram);
+    }
+
     this.setState({
-      actualInstagramMatchGroup: instagramMatchingGroup}, function () {
-        this.updateMatchingGroup()
-      }
-    )
+      actualInstagramMatchGroup: instagramMatchingGroup,
+      changingInstagram:   setTimeout( ()  => {
+          this.updateMatchingGroup(true);
+      }, 750)
+    });
   },
 
   /**
@@ -264,11 +284,20 @@ const MatchingGroup = React.createClass({
   onChangeKeywords: function (iterator, e) {
     let instagramMatchingGroup = Object.assign({}, this.state.actualInstagramMatchGroup);
     instagramMatchingGroup['keywords'][iterator] = e.target.value;
+
+    let twitterMatchingGroup = Object.assign({}, this.state.actualTwitterMatchGroup);
+    twitterMatchingGroup['keywords'][iterator] = e.target.value;
+
+    if (this.state.changingKeywords) {
+        clearTimeout(this.state.changingKeywords);
+    }
+
     this.setState({
-      actualInstagramMatchGroup: instagramMatchingGroup}, function () {
-        this.updateMatchingGroup()
-      }
-    )
+      actualInstagramMatchGroup: instagramMatchingGroup,
+      changingKeywords:   setTimeout( ()  => {
+          this.updateMatchingGroup(true);
+      }, 750)
+    });
   },
 
   preventOnChange: function () {
