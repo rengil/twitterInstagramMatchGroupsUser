@@ -165,7 +165,6 @@ const MatchingGroup = React.createClass({
     let twitterMatchingGroup = Object.assign({}, this.state.actualTwitterMatchGroup);
     twitterMatchingGroup['name'] = event.target.value;
 
-
     if (this.state.changingName) {
         clearTimeout(this.state.changingName);
     }

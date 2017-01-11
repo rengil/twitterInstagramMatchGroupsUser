@@ -14,6 +14,15 @@ var sinon = require('sinon');
 
 describe('<App />', () => {
 
+  var clock;
+  beforeEach(function () {
+       clock = sinon.useFakeTimers();
+   });
+
+  afterEach(function () {
+      clock.restore();
+  });
+
   it(' has the initial states', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.state().userRegistered).to.equal(false);
@@ -59,7 +68,6 @@ describe('<App />', () => {
     wrapper.instance().fetchUserBasicInformation('c0e010c0-d390-11e6-953a-573fa9b67d9f').then(
     function (result) {
       expect(result.firstName).to.equal('chai');
-      done();
     },
     function (err) {
      done(err);
@@ -71,5 +79,25 @@ describe('<App />', () => {
        done(err);
     });
   });
+
+  it(' given key types, should send only one request', () => {
+
+      const wrapper = mount(<App  />);
+      let data = {
+        firstName: 'chai',
+        lastName: 'jasmine',
+        email: 'chai@test.com.br'
+      }
+      const instance = wrapper.instance();
+      instance.fethInsertUserBasicInfo = sinon.spy(instance.fethInsertUserBasicInfo);
+      wrapper.update();
+      wrapper.instance().sendUserInfo(data);
+      wrapper.instance().sendUserInfo(data);
+      wrapper.instance().sendUserInfo(data);
+      wrapper.instance().sendUserInfo(data);
+      clock.tick(1000);
+      expect(instance.fethInsertUserBasicInfo).to.have.property('callCount', 1);
+
+    });
 
 });

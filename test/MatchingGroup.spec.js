@@ -13,6 +13,15 @@ var sinon = require('sinon');
 
 describe('<MatchingGroup />', () => {
 
+  var clock;
+  beforeEach(function () {
+       clock = sinon.useFakeTimers();
+   });
+
+  afterEach(function () {
+      clock.restore();
+  });
+
   it(' has the initial states', () => {
     const wrapper = shallow(<MatchingGroup />);
     wrapper.setProps({ matchGroupName: 'Test' })
@@ -115,5 +124,100 @@ describe('<MatchingGroup />', () => {
             .that.equals('string2');
 
   });
+
+  it(' given key types on name , should send only one request', () => {
+
+      const wrapper = mount(<MatchingGroup  />);
+      var data = {};
+      data.target = {};
+      data.target.value = '';
+      const instance = wrapper.instance();
+      instance.updateMatchingGroup = sinon.spy(instance.updateMatchingGroup);
+      wrapper.update();
+      wrapper.instance().onChangeName(data);
+      wrapper.instance().onChangeName(data);
+      wrapper.instance().onChangeName(data);
+      wrapper.instance().onChangeName(data);
+      clock.tick(1000);
+      expect(instance.updateMatchingGroup).to.have.property('callCount', 1);
+
+    });
+
+    it(' given key types on twitter , should send only one request', () => {
+
+        const wrapper = mount(<MatchingGroup  />);
+        var data = {};
+        data.target = {};
+        data.target.value = '';
+        const instance = wrapper.instance();
+        instance.updateMatchingGroup = sinon.spy(instance.updateMatchingGroup);
+        wrapper.update();
+        wrapper.setState(
+          {
+            actualTwitterMatchGroup: {
+              influencers: []
+            }
+          }
+        )
+        wrapper.instance().onChangeTwitter(1,data);
+        wrapper.instance().onChangeTwitter(1,data);
+        wrapper.instance().onChangeTwitter(1,data);
+        wrapper.instance().onChangeTwitter(1,data);
+        clock.tick(1000);
+        expect(instance.updateMatchingGroup).to.have.property('callCount', 1);
+
+    });
+
+    it(' given key types on instagram , should send only one request', () => {
+
+        const wrapper = mount(<MatchingGroup  />);
+        var data = {};
+        data.target = {};
+        data.target.value = '';
+        const instance = wrapper.instance();
+        instance.updateMatchingGroup = sinon.spy(instance.updateMatchingGroup);
+        wrapper.update();
+        wrapper.setState(
+          { actualInstagramMatchGroup : {
+            influencers: []
+          },
+          }
+        )
+        wrapper.instance().onChangeInstagram(1,data);
+        wrapper.instance().onChangeInstagram(1,data);
+        wrapper.instance().onChangeInstagram(1,data);
+        wrapper.instance().onChangeInstagram(1,data);
+        clock.tick(1000);
+        expect(instance.updateMatchingGroup).to.have.property('callCount', 1);
+
+    });
+
+    it(' given key types on keywords , should send only one request', () => {
+
+        const wrapper = mount(<MatchingGroup  />);
+        var data = {};
+        data.target = {};
+        data.target.value = '';
+        const instance = wrapper.instance();
+        instance.updateMatchingGroup = sinon.spy(instance.updateMatchingGroup);
+        wrapper.update();
+        wrapper.setState(
+          { actualInstagramMatchGroup : {
+            keywords: []
+          },
+            actualTwitterMatchGroup: {
+              keywords: []
+            }
+          }
+        )
+        wrapper.instance().onChangeKeywords(1,data);
+        wrapper.instance().onChangeKeywords(1,data);
+        wrapper.instance().onChangeKeywords(1,data);
+        wrapper.instance().onChangeKeywords(1,data);
+        clock.tick(1000);
+        expect(instance.updateMatchingGroup).to.have.property('callCount', 1);
+
+    });
+
 
 });
